@@ -4,7 +4,7 @@ import { bigint, mysqlTable, serial, text } from "drizzle-orm/mysql-core";
 
 const examples = mysqlTable("examples", {
   id: serial("id").primaryKey(),
-  example: text("example").notNull().unique(),
+  example: text("example").notNull(),
   definitionId: bigint("definitionId", { mode: "number" }).notNull(),
 });
 
