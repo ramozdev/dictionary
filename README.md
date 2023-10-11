@@ -1,2 +1,3 @@
 # slang
-Dominican slang dictionary
+
+Slang dictionary
