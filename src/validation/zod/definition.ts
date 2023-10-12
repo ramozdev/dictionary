@@ -1,3 +1,4 @@
+import { definitions } from "@/server/db/schema";
 import * as z from "zod";
 
 export const definitionModel = z.object({
@@ -9,7 +10,7 @@ export const definitionModel = z.object({
     .transform((id) => Number(id)),
   definition: z.string().min(1),
   idiom: z.string().min(1),
-  pos: z.string().min(1),
+  pos: z.enum(definitions.pos.enumValues),
   slangId: z
     .string()
     .refine((id) => !id || !isNaN(parseFloat(id)), {
