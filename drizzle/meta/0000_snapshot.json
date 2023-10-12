@@ -1,9 +1,40 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "ed1def67-e4cb-4ba1-bcd8-3c0992f15fc8",
+  "id": "4e136e1c-8439-4164-b1f4-a13a364075d8",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
+    "abbreviations_to_slangs": {
+      "name": "abbreviations_to_slangs",
+      "columns": {
+        "abbreviationId": {
+          "name": "abbreviationId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "slangId": {
+          "name": "slangId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "abbreviations_to_slangs_abbreviationId_slangId": {
+          "name": "abbreviations_to_slangs_abbreviationId_slangId",
+          "columns": [
+            "abbreviationId",
+            "slangId"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
     "abbreviations": {
       "name": "abbreviations",
       "columns": {
@@ -138,6 +169,37 @@
           "columns": [
             "provider",
             "providerAccountId"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "antonyms_to_slangs": {
+      "name": "antonyms_to_slangs",
+      "columns": {
+        "antonymId": {
+          "name": "antonymId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "slangId": {
+          "name": "slangId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "antonyms_to_slangs_antonymId_slangId": {
+          "name": "antonyms_to_slangs_antonymId_slangId",
+          "columns": [
+            "antonymId",
+            "slangId"
           ]
         }
       },
@@ -459,6 +521,37 @@
         }
       }
     },
+    "synonyms_to_slangs": {
+      "name": "synonyms_to_slangs",
+      "columns": {
+        "synonymId": {
+          "name": "synonymId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "slangId": {
+          "name": "slangId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "synonyms_to_slangs_slangId_synonymId": {
+          "name": "synonyms_to_slangs_slangId_synonymId",
+          "columns": [
+            "slangId",
+            "synonymId"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
     "synonyms": {
       "name": "synonyms",
       "columns": {
@@ -495,6 +588,37 @@
           ]
         }
       }
+    },
+    "tags_to_slangs": {
+      "name": "tags_to_slangs",
+      "columns": {
+        "tagId": {
+          "name": "tagId",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "slangId": {
+          "name": "slangId",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {
+        "tags_to_slangs_slangId_tagId": {
+          "name": "tags_to_slangs_slangId_tagId",
+          "columns": [
+            "slangId",
+            "tagId"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
     },
     "tags": {
       "name": "tags",

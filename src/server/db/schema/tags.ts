@@ -1,4 +1,4 @@
-import { slangs } from "@/server/db/schema/slangs";
+import { tagsToSlangs } from "@/server/db/schema/tags-to-slangs";
 import { relations } from "drizzle-orm";
 import { mysqlTable, serial, varchar } from "drizzle-orm/mysql-core";
 
@@ -8,7 +8,7 @@ const tags = mysqlTable("tags", {
 });
 
 const tagsRelations = relations(tags, ({ many }) => ({
-  slangs: many(slangs),
+  slangs: many(tagsToSlangs),
 }));
 
 export { tags, tagsRelations };

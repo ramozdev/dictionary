@@ -1,5 +1,6 @@
 import { accounts } from "@/server/db/schema/accounts";
 import { sessions } from "@/server/db/schema/sessions";
+import { slangs } from "@/server/db/schema/slangs";
 import { relations, sql } from "drizzle-orm";
 import { index, mysqlTable, timestamp, varchar } from "drizzle-orm/mysql-core";
 
@@ -23,6 +24,7 @@ const users = mysqlTable(
 const usersRelations = relations(users, ({ many }) => ({
   accounts: many(accounts),
   sessions: many(sessions),
+  slangs: many(slangs),
 }));
 
 export { users, usersRelations };

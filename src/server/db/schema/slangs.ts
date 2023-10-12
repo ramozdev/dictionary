@@ -1,9 +1,9 @@
-import { abbreviations } from "@/server/db/schema/abbreviations";
-import { antonyms } from "@/server/db/schema/antonyms";
+import { abbreviationsToSlangs } from "@/server/db/schema/abbreviations-to-slangs";
+import { antonymsToSlangs } from "@/server/db/schema/antonyms-to-slangs";
 import { definitions } from "@/server/db/schema/definitions";
 import { spellings } from "@/server/db/schema/spellings";
-import { synonyms } from "@/server/db/schema/synonyms";
-import { tags } from "@/server/db/schema/tags";
+import { synonymsToSlangs } from "@/server/db/schema/synonyms-to-slangs";
+import { tagsToSlangs } from "@/server/db/schema/tags-to-slangs";
 import { users } from "@/server/db/schema/users";
 import { relations, sql } from "drizzle-orm";
 import {
@@ -33,12 +33,12 @@ const slangs = mysqlTable("slangs", {
 });
 
 const slangsRelations = relations(slangs, ({ many, one }) => ({
-  spellings: many(spellings),
-  synonyms: many(synonyms),
-  antonyms: many(antonyms),
-  abbreviations: many(abbreviations),
+  abbreviations: many(abbreviationsToSlangs),
+  antonyms: many(antonymsToSlangs),
   definitions: many(definitions),
-  tags: many(tags),
+  spellings: many(spellings),
+  synonyms: many(synonymsToSlangs),
+  tags: many(tagsToSlangs),
   user: one(users, {
     fields: [slangs.userId],
     references: [users.id],

@@ -1,4 +1,4 @@
-import { slangs } from "@/server/db/schema/slangs";
+import { abbreviationsToSlangs } from "@/server/db/schema/abbreviations-to-slangs";
 import { relations } from "drizzle-orm";
 import { mysqlTable, serial, varchar } from "drizzle-orm/mysql-core";
 
@@ -8,7 +8,7 @@ const abbreviations = mysqlTable("abbreviations", {
 });
 
 const abbreviationsRelations = relations(abbreviations, ({ many }) => ({
-  slangs: many(slangs),
+  slangs: many(abbreviationsToSlangs),
 }));
 
 export { abbreviations, abbreviationsRelations };

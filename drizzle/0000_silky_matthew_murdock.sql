@@ -1,3 +1,9 @@
+CREATE TABLE `abbreviations_to_slangs` (
+	`abbreviationId` varchar(255) NOT NULL,
+	`slangId` bigint NOT NULL,
+	CONSTRAINT `abbreviations_to_slangs_abbreviationId_slangId` PRIMARY KEY(`abbreviationId`,`slangId`)
+);
+--> statement-breakpoint
 CREATE TABLE `abbreviations` (
 	`id` serial AUTO_INCREMENT NOT NULL,
 	`abbreviation` varchar(191) NOT NULL,
@@ -18,6 +24,12 @@ CREATE TABLE `account` (
 	`id_token` text,
 	`session_state` varchar(255),
 	CONSTRAINT `account_provider_providerAccountId` PRIMARY KEY(`provider`,`providerAccountId`)
+);
+--> statement-breakpoint
+CREATE TABLE `antonyms_to_slangs` (
+	`antonymId` varchar(255) NOT NULL,
+	`slangId` bigint NOT NULL,
+	CONSTRAINT `antonyms_to_slangs_antonymId_slangId` PRIMARY KEY(`antonymId`,`slangId`)
 );
 --> statement-breakpoint
 CREATE TABLE `antonyms` (
@@ -74,11 +86,23 @@ CREATE TABLE `spellings` (
 	CONSTRAINT `spellings_spelling_unique` UNIQUE(`spelling`)
 );
 --> statement-breakpoint
+CREATE TABLE `synonyms_to_slangs` (
+	`synonymId` varchar(255) NOT NULL,
+	`slangId` bigint NOT NULL,
+	CONSTRAINT `synonyms_to_slangs_slangId_synonymId` PRIMARY KEY(`slangId`,`synonymId`)
+);
+--> statement-breakpoint
 CREATE TABLE `synonyms` (
 	`id` serial AUTO_INCREMENT NOT NULL,
 	`synonym` varchar(191) NOT NULL,
 	CONSTRAINT `synonyms_id` PRIMARY KEY(`id`),
 	CONSTRAINT `synonyms_synonym_unique` UNIQUE(`synonym`)
+);
+--> statement-breakpoint
+CREATE TABLE `tags_to_slangs` (
+	`tagId` varchar(255) NOT NULL,
+	`slangId` bigint NOT NULL,
+	CONSTRAINT `tags_to_slangs_slangId_tagId` PRIMARY KEY(`slangId`,`tagId`)
 );
 --> statement-breakpoint
 CREATE TABLE `tags` (
