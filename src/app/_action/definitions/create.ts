@@ -8,5 +8,7 @@ export async function createDefinitions(
   data: HandleFormSchema["create"]["definitions"],
 ) {
   if (data.length === 0) return;
-  await db.insert(definitions).values(data);
+  const res = await db.insert(definitions).values(data);
+
+  return Number(res.insertId);
 }
