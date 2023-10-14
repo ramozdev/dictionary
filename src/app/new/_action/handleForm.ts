@@ -9,6 +9,7 @@ import { createSynonyms } from "@/app/_action/synonyms";
 import { createTags } from "@/app/_action/tags";
 import { createSlang } from "@/app/new/_action/slang";
 import { createSlangSchema } from "@/app/new/validation";
+import slugify from "sluga";
 
 export async function handleForm(formData: unknown) {
   const {
@@ -22,7 +23,10 @@ export async function handleForm(formData: unknown) {
     tags,
   } = createSlangSchema.parse(formData);
 
-  const slangId = await createSlang(slang);
+  const slangId = await createSlang({
+    ...slang,
+    slug: slugify(slang.slang),
+  });
   await createDefinitions(definitions.map((item) => ({ ...item, slangId })));
   await createAntonyms(antonyms.map((item) => ({ ...item, slangId })));
   await createAbbreviations(

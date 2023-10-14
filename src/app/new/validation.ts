@@ -3,11 +3,10 @@ import { z } from "zod";
 const createSlangSchema = z.object({
   slang: z.object({
     slang: z.string().min(1),
-    slug: z.string().min(1),
     explicit: z.boolean(),
     userId: z.string(),
-    augmentative: z.string().min(1),
-    diminutive: z.string().min(1),
+    augmentative: z.string(),
+    diminutive: z.string(),
   }),
   abbreviations: z
     .object({
