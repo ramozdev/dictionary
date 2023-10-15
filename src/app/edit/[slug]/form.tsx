@@ -6,9 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { startTransition } from "react";
 import { getUCR } from "ucr";
 import { handleForm } from "@/app/_action/handleForm";
+import { type SlangParser } from "./parser";
 
 type Props = {
-  defaultData?: UcrSlangInput;
+  defaultData?: SlangParser;
 };
 
 export default function Form({ defaultData }: Props) {
@@ -20,7 +21,69 @@ export default function Form({ defaultData }: Props) {
     setValue,
     formState: { defaultValues },
   } = useForm<UcrSlangInput>({
-    defaultValues: defaultData,
+    defaultValues: {
+      definitions: defaultData?.definitions.map(
+        ({ definition, id, idiom, pos }) => ({
+          definition: {
+            action: "",
+            value: definition,
+          },
+          definitionId: {
+            action: "ID",
+            value: id,
+          },
+          idiom: {
+            action: "",
+            value: idiom,
+          },
+          pos: {
+            action: "",
+            value: pos,
+          },
+        }),
+      ),
+      examples: defaultData?.examples.map(({ example, id, definitionId }) => ({
+        example: {
+          action: "",
+          value: example,
+        },
+        exampleId: {
+          action: "ID",
+          value: id,
+        },
+        definitionId: {
+          action: "",
+          value: definitionId,
+        },
+      })),
+      slang: {
+        augmentative: {
+          action: "",
+          value: defaultData?.augmentative,
+        },
+        diminutive: {
+          action: "",
+          value: defaultData?.diminutive,
+        },
+        explicit: {
+          action: "",
+          value: defaultData?.explicit,
+        },
+        slang: {
+          action: "",
+          value: defaultData?.slang,
+        },
+        slangId: {
+          action: "ID",
+          value: defaultData?.id,
+        },
+      },
+      abbreviations: [],
+      antonyms: [],
+      spellings: [],
+      tags: [],
+      synonyms: [],
+    },
     resolver: zodResolver(ucrSlangSchema, undefined, { raw: true }),
   });
 
@@ -58,6 +121,12 @@ export default function Form({ defaultData }: Props) {
     keyName: "_id",
   });
 
+  const _examples = useFieldArray({
+    control,
+    name: "examples",
+    keyName: "_id",
+  });
+
   return (
     <main className="mx-auto max-w-screen-md">
       <form onSubmit={(e) => void onSubmit(e)} className="grid">
@@ -82,7 +151,7 @@ export default function Form({ defaultData }: Props) {
         </div>
 
         <div className="grid gap-1">
-          <label htmlFor={`slang.completed.value`}>Completed</label>
+          <label htmlFor={`slang.explicit.value`}>Explicit</label>
           <input
             type="checkbox"
             {...register(`slang.explicit.value`, {
@@ -144,6 +213,92 @@ export default function Form({ defaultData }: Props) {
                       />
                     )}
                   </div>
+
+                  {_examples.fields
+                    .filter(
+                      ({ definitionId }) =>
+                        definitionId.value === field.definitionId.value,
+                    )
+                    .map((field, index) => {
+                      if (field.example.action === "REMOVE") return null;
+
+                      return (
+                        <div key={field._id}>
+                          <div className="grid gap-2">
+                            <div className="grid gap-1">
+                              <label
+                                htmlFor={`examples.${index}.example.value`}
+                              >
+                                Example
+                              </label>
+                              {field.exampleId.action === "CREATE" ? (
+                                <input
+                                  className="ring-1"
+                                  {...register(
+                                    `examples.${index}.example.value`,
+                                  )}
+                                />
+                              ) : (
+                                <input
+                                  className="ring-1"
+                                  {...register(
+                                    `examples.${index}.example.value`,
+                                    {
+                                      onChange: ({ target }) => {
+                                        const { value } =
+                                          target as HTMLInputElement;
+                                        setValue(
+                                          `examples.${index}.example.value`,
+                                          value,
+                                        );
+                                        if (
+                                          value ===
+                                          defaultValues?.examples?.[index]
+                                            ?.example?.value
+                                        ) {
+                                          setValue(
+                                            `examples.${index}.example.action`,
+                                            "",
+                                          );
+                                          return;
+                                        }
+                                        setValue(
+                                          `examples.${index}.example.action`,
+                                          `UPDATE`,
+                                        );
+                                      },
+                                    },
+                                  )}
+                                />
+                              )}
+                            </div>
+                            <button
+                              type="button"
+                              className="mt-auto"
+                              onClick={() => {
+                                if (field.exampleId.value === "") {
+                                  _examples.remove(index);
+                                  return;
+                                }
+                                // TODO: Find the correct index to delete
+                                // Currently doesn't work because there are
+                                // renders of the entire _examples array
+                                _examples.update(index, {
+                                  ...field,
+                                  example: {
+                                    ...field.example,
+                                    action: "REMOVE",
+                                  },
+                                });
+                              }}
+                            >
+                              Delete example
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+
                   <button
                     type="button"
                     className="mt-auto"
@@ -161,7 +316,7 @@ export default function Form({ defaultData }: Props) {
                       });
                     }}
                   >
-                    Delete
+                    Delete definition
                   </button>
                 </div>
               </div>

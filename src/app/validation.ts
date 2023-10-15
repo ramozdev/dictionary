@@ -57,6 +57,7 @@ const ucrSlangSchema = z.object({
     .object({
       exampleId: ucrItemSchema,
       example: ucrItemSchema,
+      definitionId: ucrItemSchema,
     })
     .array(),
 });

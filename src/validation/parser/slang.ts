@@ -6,7 +6,7 @@ export const slangModelParser = z.object({
   slug: z.string().min(1),
   createdAt: z.date().transform((val) => (val ? val.toISOString() : "")),
   updatedAt: z.date().transform((val) => (val ? val.toISOString() : "")),
-  explicit: z.boolean().transform((val) => val.toString()),
+  explicit: z.boolean(),
   diminutive: z
     .string()
     .nullable()

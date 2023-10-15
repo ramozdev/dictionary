@@ -28,12 +28,6 @@ export function Search() {
       });
   }, [debouncedText]);
 
-  // const { data, isFetching } = api.search.slang.useQuery(
-  //   { slang: debouncedText },
-  //   {
-  //     enabled: debouncedText.length > 2,
-  //   },
-  // );
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -51,7 +45,7 @@ export function Search() {
     <>
       <button type="button" onClick={() => setOpen((open) => !open)}>
         <p>Search</p>
-        <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-slate-100 bg-slate-100 px-1.5 font-mono text-[10px] font-medium text-slate-600 opacity-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400">
+        <kbd>
           <span className="text-xs">⌘</span>K
         </kbd>
       </button>

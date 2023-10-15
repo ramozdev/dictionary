@@ -1,12 +1,12 @@
-import { getSlangs } from "@/app/query";
+import Form from "./form";
+import { getSlang } from "./query";
 
-export default async function Page() {
-  const data = await getSlangs();
+export default async function Page({ params }: { params: { slug: string } }) {
+  const data = await getSlang(params.slug);
 
   return (
     <main className="mx-auto max-w-screen-md">
-      hello
-      <pre>{JSON.stringify(data, null, 2)}</pre>
+      <Form defaultData={data} />
     </main>
   );
 }
