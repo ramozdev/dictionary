@@ -42,11 +42,10 @@ CREATE TABLE `antonyms` (
 CREATE TABLE `definitions` (
 	`id` serial AUTO_INCREMENT NOT NULL,
 	`definition` text NOT NULL,
-	`idiom` varchar(191) NOT NULL,
+	`idiom` varchar(191),
 	`slangId` bigint NOT NULL,
 	`pos` varchar(20),
-	CONSTRAINT `definitions_id` PRIMARY KEY(`id`),
-	CONSTRAINT `definitions_idiom_unique` UNIQUE(`idiom`)
+	CONSTRAINT `definitions_id` PRIMARY KEY(`id`)
 );
 --> statement-breakpoint
 CREATE TABLE `examples` (
@@ -69,7 +68,7 @@ CREATE TABLE `slangs` (
 	`slug` varchar(191) NOT NULL,
 	`createdAt` timestamp(3) DEFAULT CURRENT_TIMESTAMP(3),
 	`updatedAt` timestamp(3) DEFAULT CURRENT_TIMESTAMP(3),
-	`explicit` boolean DEFAULT false,
+	`explicit` boolean NOT NULL DEFAULT false,
 	`diminutive` varchar(191),
 	`augmentative` varchar(191),
 	`userId` varchar(255) NOT NULL,

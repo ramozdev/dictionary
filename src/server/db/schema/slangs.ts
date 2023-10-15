@@ -26,7 +26,7 @@ const slangs = mysqlTable("slangs", {
     mode: "date",
     fsp: 3,
   }).default(sql`CURRENT_TIMESTAMP(3)`),
-  explicit: boolean("explicit").default(false),
+  explicit: boolean("explicit").default(false).notNull(),
   diminutive: varchar("diminutive", { length: 191 }),
   augmentative: varchar("augmentative", { length: 191 }),
   userId: varchar("userId", { length: 255 }).notNull(),

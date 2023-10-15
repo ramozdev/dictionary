@@ -21,7 +21,7 @@ export const slangModel = z.object({
       message: "A valid date is required.",
     })
     .transform((date) => new Date(date)),
-  explicit: z.string().transform((val) => val === "true"),
+  explicit: z.boolean(),
   diminutive: z
     .string()
     .transform((val) => (val === "" ? null : val))

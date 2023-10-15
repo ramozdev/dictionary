@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "4e136e1c-8439-4164-b1f4-a13a364075d8",
+  "id": "8b0f6684-9f1f-427c-a184-5a3dd5d3a72c",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "abbreviations_to_slangs": {
@@ -263,7 +263,7 @@
           "name": "idiom",
           "type": "varchar(191)",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "slangId": {
@@ -291,14 +291,7 @@
           ]
         }
       },
-      "uniqueConstraints": {
-        "definitions_idiom_unique": {
-          "name": "definitions_idiom_unique",
-          "columns": [
-            "idiom"
-          ]
-        }
-      }
+      "uniqueConstraints": {}
     },
     "examples": {
       "name": "examples",
@@ -426,7 +419,7 @@
           "name": "explicit",
           "type": "boolean",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "autoincrement": false,
           "default": false
         },

@@ -18,7 +18,7 @@ export default function Form() {
       slang: {
         augmentative: "",
         diminutive: "",
-        explicit: "false",
+        explicit: false,
         slang: "",
       },
       definitions: [{ definition: "", pos: "adjective", idiom: "" }],
@@ -62,6 +62,11 @@ export default function Form() {
         <div className="mb-4 grid gap-1">
           <label>Slang</label>
           <input className="ring-1" {...register("slang.slang")} />
+        </div>
+
+        <div className="flex gap-1">
+          <label htmlFor={`slang.explicit`}>Explicit</label>
+          <input type="checkbox" {...register(`slang.explicit`)} />
         </div>
 
         <div>Definitions</div>
