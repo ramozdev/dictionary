@@ -83,14 +83,26 @@ export default function Form() {
                   if (fieldExample.definitionIndex !== index) return null;
 
                   return (
-                    <div key={fieldExample._id} className="grid gap-1">
-                      <label htmlFor={`examples.${indexExample}.example`}>
-                        Example
-                      </label>
-                      <textarea
-                        className="ring-1"
-                        {...register(`examples.${indexExample}.example`)}
-                      ></textarea>
+                    <div key={fieldExample._id}>
+                      <div className="grid gap-1">
+                        <label htmlFor={`examples.${indexExample}.example`}>
+                          Example
+                        </label>
+                        <textarea
+                          className="ring-1"
+                          {...register(`examples.${indexExample}.example`)}
+                        ></textarea>
+                      </div>
+
+                      <div>
+                        <button
+                          type="button"
+                          className="mb-8 ring-1"
+                          onClick={() => _examples.remove(indexExample)}
+                        >
+                          Delete example
+                        </button>
+                      </div>
                     </div>
                   );
                 })}
@@ -110,27 +122,22 @@ export default function Form() {
                   </button>
                 </div>
 
-                <div>
-                  <button
-                    type="button"
-                    className="mb-8 ring-1"
-                    onClick={() => {
-                      _definitions.append({
-                        definition: "",
-                        pos: "adjective",
-                        idiom: "",
-                      });
-                    }}
-                  >
-                    Add definition
-                  </button>
-                </div>
-
-                {index > 0 && (
+                {index === _definitions.fields.length - 1 && (
                   <button
                     type="button"
                     className="mt-auto"
-                    onClick={() => _definitions.remove(index)}
+                    onClick={() => {
+                      _definitions.remove(index);
+                      const examplesToDelete: number[] = [];
+
+                      _examples.fields.forEach((fieldExample, indexExample) => {
+                        if (fieldExample.definitionIndex === index) {
+                          examplesToDelete.push(indexExample);
+                        }
+                      });
+
+                      _examples.remove(examplesToDelete);
+                    }}
                   >
                     Delete
                   </button>
@@ -138,6 +145,21 @@ export default function Form() {
               </div>
             </div>
           ))}
+          <div>
+            <button
+              type="button"
+              className="mb-8 ring-1"
+              onClick={() => {
+                _definitions.append({
+                  definition: "",
+                  pos: "adjective",
+                  idiom: "",
+                });
+              }}
+            >
+              Add definition
+            </button>
+          </div>
         </div>
 
         <button className="ring-1">Save changes</button>
