@@ -50,6 +50,12 @@ export default function Form() {
     keyName: "_id",
   });
 
+  const _examples = useFieldArray({
+    control,
+    name: "examples",
+    keyName: "_id",
+  });
+
   return (
     <main className="mx-auto max-w-screen-md">
       <form onSubmit={(e) => void onSubmit(e)} className="mt-4 grid">
@@ -58,16 +64,13 @@ export default function Form() {
           <input className="ring-1" {...register("slang.slang")} />
         </div>
 
-        <div>Definition</div>
+        <div>Definitions</div>
         <div className="mb-4">
           {_definitions.fields.map((field, index) => (
             <div key={field._id}>
               <div className="flex gap-2">
                 <div className="grid gap-1">
-                  <label
-                    className="sr-only"
-                    htmlFor={`definitions.${index}.definition`}
-                  >
+                  <label htmlFor={`definitions.${index}.definition`}>
                     Definition
                   </label>
                   <textarea
@@ -75,6 +78,54 @@ export default function Form() {
                     {...register(`definitions.${index}.definition`)}
                   ></textarea>
                 </div>
+
+                {_examples.fields.map((fieldExample, indexExample) => {
+                  if (fieldExample.definitionIndex !== index) return null;
+
+                  return (
+                    <div key={fieldExample._id} className="grid gap-1">
+                      <label htmlFor={`examples.${indexExample}.example`}>
+                        Example
+                      </label>
+                      <textarea
+                        className="ring-1"
+                        {...register(`examples.${indexExample}.example`)}
+                      ></textarea>
+                    </div>
+                  );
+                })}
+
+                <div>
+                  <button
+                    type="button"
+                    className="mb-8 ring-1"
+                    onClick={() => {
+                      _examples.append({
+                        definitionIndex: index,
+                        example: "",
+                      });
+                    }}
+                  >
+                    Add example
+                  </button>
+                </div>
+
+                <div>
+                  <button
+                    type="button"
+                    className="mb-8 ring-1"
+                    onClick={() => {
+                      _definitions.append({
+                        definition: "",
+                        pos: "adjective",
+                        idiom: "",
+                      });
+                    }}
+                  >
+                    Add definition
+                  </button>
+                </div>
+
                 {index > 0 && (
                   <button
                     type="button"

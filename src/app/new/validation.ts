@@ -53,6 +53,9 @@ const createSlangSchema = z.object({
     .pick({
       example: true,
     })
+    .extend({
+      definitionIndex: z.number(),
+    })
     .array(),
 });
 

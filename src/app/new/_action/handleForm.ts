@@ -3,7 +3,7 @@
 import { createAbbreviations } from "@/app/_action/abbreviations";
 import { createAntonyms } from "@/app/_action/antonyms";
 import { createDefinitions } from "@/app/_action/definitions";
-// import { createExamples } from "@/app/_action/examples";
+import { createExamples } from "@/app/_action/examples";
 import { createSpellings } from "@/app/_action/spellings";
 import { createSynonyms } from "@/app/_action/synonyms";
 import { createTags } from "@/app/_action/tags";
@@ -22,7 +22,7 @@ export async function handleForm(formData: unknown) {
     abbreviations,
     antonyms,
     definitions,
-    // examples,
+    examples,
     spellings,
     synonyms,
     tags,
@@ -33,12 +33,31 @@ export async function handleForm(formData: unknown) {
     userId: authUser.id,
     slug: slugify(slang.slang),
   });
-  await createDefinitions(definitions.map((item) => ({ ...item, slangId })));
+
+  const definitionsWithExamples = definitions.map((definition, index) => ({
+    ...definition,
+    examples: examples.filter(
+      ({ definitionIndex }) => definitionIndex === index,
+    ),
+  }));
+
+  await Promise.all(
+    definitionsWithExamples.map(async ({ examples, ...definition }) => {
+      const definitionId = await createDefinitions([
+        { ...definition, slangId },
+      ]);
+      if (definitionId) {
+        await createExamples(
+          examples.map((item) => ({ ...item, definitionId })),
+        );
+      }
+    }),
+  );
+
   await createAntonyms(antonyms.map((item) => ({ ...item, slangId })));
   await createAbbreviations(
     abbreviations.map((item) => ({ ...item, slangId })),
   );
-  // await createExamples(examples.map((item) => ({ ...item, slangId })));
   await createSpellings(spellings.map((item) => ({ ...item, slangId })));
   await createSynonyms(synonyms.map((item) => ({ ...item, slangId })));
   await createTags(tags.map((item) => ({ ...item, slangId })));
