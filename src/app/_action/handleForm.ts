@@ -11,7 +11,7 @@ import {
   updateAntonyms,
 } from "@/app/_action/antonyms";
 import {
-  createDefinitions,
+  // createDefinitions,
   removeDefinitions,
   updateDefinitions,
 } from "@/app/_action/definitions";
@@ -47,7 +47,7 @@ export async function handleForm(formData: unknown) {
 
   await removeDefinitions(remove.definitions);
   await updateDefinitions(update.definitions);
-  await createDefinitions(create.definitions);
+  // await createDefinitions(create.definitions);
 
   await removeExamples(remove.examples);
   await updateExamples(update.examples);

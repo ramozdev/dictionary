@@ -22,7 +22,13 @@ export const slangModel = z.object({
     })
     .transform((date) => new Date(date)),
   explicit: z.string().transform((val) => val === "true"),
-  diminutive: z.string(),
-  augmentative: z.string(),
-  userId: z.string(),
+  diminutive: z
+    .string()
+    .transform((val) => (val === "" ? null : val))
+    .nullish(),
+  augmentative: z
+    .string()
+    .transform((val) => (val === "" ? null : val))
+    .nullish(),
+  userId: z.string().uuid(),
 });

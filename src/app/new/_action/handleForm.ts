@@ -9,9 +9,14 @@ import { createSynonyms } from "@/app/_action/synonyms";
 import { createTags } from "@/app/_action/tags";
 import { createSlang } from "@/app/new/_action/slang";
 import { createSlangSchema } from "@/app/new/validation";
+import { getCurrentUser } from "@/lib/session";
 import slugify from "sluga";
 
 export async function handleForm(formData: unknown) {
+  const authUser = await getCurrentUser();
+
+  if (!authUser) throw new Error("Unauthorized");
+
   const {
     slang,
     abbreviations,
@@ -25,6 +30,7 @@ export async function handleForm(formData: unknown) {
 
   const slangId = await createSlang({
     ...slang,
+    userId: authUser.id,
     slug: slugify(slang.slang),
   });
   await createDefinitions(definitions.map((item) => ({ ...item, slangId })));

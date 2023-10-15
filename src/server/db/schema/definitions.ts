@@ -12,7 +12,7 @@ import {
 const definitions = mysqlTable("definitions", {
   id: serial("id").primaryKey(),
   definition: text("definition").notNull(),
-  idiom: varchar("idiom", { length: 191 }).notNull().unique(),
+  idiom: varchar("idiom", { length: 191 }),
   slangId: bigint("slangId", { mode: "number" }).notNull(),
   pos: varchar("pos", {
     length: 20,

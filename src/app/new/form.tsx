@@ -7,16 +7,21 @@ import { type CreateSlangInput, createSlangSchema } from "@/app/new/validation";
 import { handleForm } from "@/app/new/_action/handleForm";
 
 export default function Form() {
-  const { register, handleSubmit, control, watch } = useForm<CreateSlangInput>({
+  const {
+    register,
+    handleSubmit,
+    control,
+    watch,
+    formState: { errors },
+  } = useForm<CreateSlangInput>({
     defaultValues: {
       slang: {
         augmentative: "",
         diminutive: "",
-        explicit: false,
+        explicit: "false",
         slang: "",
-        userId: "",
       },
-      definitions: [{ definition: "" }],
+      definitions: [{ definition: "", pos: "adjective", idiom: "" }],
       abbreviations: [],
       antonyms: [],
       examples: [],
@@ -87,6 +92,7 @@ export default function Form() {
         <button className="ring-1">Save changes</button>
       </form>
 
+      <pre>{JSON.stringify(errors, null, 2)}</pre>
       <pre>{JSON.stringify(watch(), null, 2)}</pre>
     </main>
   );

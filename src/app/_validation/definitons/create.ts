@@ -1,10 +1,11 @@
-import { z } from "zod";
+import { definitionModelParser } from "@/validation/parser";
+import type { z } from "zod";
 
-const createDefinitionsSchema = z
-  .object({
-    definition: z.string(),
-    idiom: z.string(),
-    slangId: z.number(),
+const createDefinitionsSchema = definitionModelParser
+  .pick({
+    definition: true,
+    idiom: true,
+    slangId: true,
   })
   .array();
 

@@ -4,7 +4,10 @@ import * as z from "zod";
 export const definitionModelParser = z.object({
   id: z.number().transform((id) => id.toString()),
   definition: z.string().min(1),
-  idiom: z.string().min(1),
+  idiom: z
+    .string()
+    .nullish()
+    .transform((val) => val ?? ""),
   pos: z.enum(definitions.pos.enumValues),
   slangId: z.number().transform((id) => id.toString()),
 });

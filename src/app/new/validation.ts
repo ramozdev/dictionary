@@ -1,48 +1,57 @@
+import {
+  abbreviationModel,
+  antonymModel,
+  definitionModel,
+  exampleModel,
+  slangModel,
+  spellingModel,
+  synonymModel,
+  tagModel,
+} from "@/validation/zod";
 import { z } from "zod";
 
 const createSlangSchema = z.object({
-  slang: z.object({
-    slang: z.string().min(1),
-    explicit: z.boolean(),
-    userId: z.string(),
-    augmentative: z.string(),
-    diminutive: z.string(),
+  slang: slangModel.pick({
+    slang: true,
+    explicit: true,
+    augmentative: true,
+    diminutive: true,
   }),
-  abbreviations: z
-    .object({
-      abbreviation: z.string().min(1),
+  abbreviations: abbreviationModel
+    .pick({
+      abbreviation: true,
     })
     .array(),
-  antonyms: z
-    .object({
-      antonym: z.string().min(1),
+  antonyms: antonymModel
+    .pick({
+      antonym: true,
     })
     .array(),
-  spellings: z
-    .object({
-      spelling: z.string().min(1),
+  spellings: spellingModel
+    .pick({
+      spelling: true,
     })
     .array(),
-  synonyms: z
-    .object({
-      synonym: z.string().min(1),
+  synonyms: synonymModel
+    .pick({
+      synonym: true,
     })
     .array(),
-  tags: z
-    .object({
-      tag: z.string().min(1),
+  tags: tagModel
+    .pick({
+      tag: true,
     })
     .array(),
-  definitions: z
-    .object({
-      definition: z.string().min(1),
-      pos: z.string().min(1),
-      idiom: z.string().min(1),
+  definitions: definitionModel
+    .pick({
+      definition: true,
+      pos: true,
+      idiom: true,
     })
     .array(),
-  examples: z
-    .object({
-      example: z.string().min(1),
+  examples: exampleModel
+    .pick({
+      example: true,
     })
     .array(),
 });

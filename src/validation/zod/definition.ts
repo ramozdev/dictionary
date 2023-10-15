@@ -9,7 +9,10 @@ export const definitionModel = z.object({
     })
     .transform((id) => Number(id)),
   definition: z.string().min(1),
-  idiom: z.string().min(1),
+  idiom: z
+    .string()
+    .transform((val) => (val === "" ? null : val))
+    .nullish(),
   pos: z.enum(definitions.pos.enumValues),
   slangId: z
     .string()
