@@ -5,6 +5,7 @@ const createDefinitionsSchema = definitionModelParser
   .pick({
     definition: true,
     idiom: true,
+    pos: true,
     slangId: true,
   })
   .array();

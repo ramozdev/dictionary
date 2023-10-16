@@ -1,3 +1,4 @@
+import { definitions } from "@/server/db/schema";
 import {
   abbreviationModelParser,
   antonymModelParser,
@@ -8,11 +9,10 @@ import {
   synonymModelParser,
   tagModelParser,
 } from "@/validation/parser";
-import type { z } from "zod";
+import { z } from "zod";
 
 const slangParser = slangModelParser
   .pick({
-    id: true,
     slug: true,
     explicit: true,
     createdAt: true,
@@ -23,52 +23,23 @@ const slangParser = slangModelParser
     userId: true,
   })
   .extend({
-    abbreviations: abbreviationModelParser
-      .pick({
-        abbreviation: true,
-        id: true,
-      })
-      .array(),
-    antonyms: antonymModelParser
-      .pick({
-        antonym: true,
-        id: true,
-      })
-      .array(),
-    definitions: definitionModelParser
-      .pick({
-        definition: true,
-        pos: true,
-        idiom: true,
-        id: true,
-      })
-      .extend({
-        examples: exampleModelParser
-          .pick({
-            example: true,
-            id: true,
-          })
-          .array(),
-      })
-      .array(),
-    spellings: spellingModelParser
-      .pick({
-        spelling: true,
-        id: true,
-      })
-      .array(),
-    synonyms: synonymModelParser
-      .pick({
-        synonym: true,
-        id: true,
-      })
-      .array(),
-    tags: tagModelParser
-      .pick({
-        tag: true,
-        id: true,
-      })
-      .array(),
+    abbreviations: abbreviationModelParser.shape.abbreviation.array(),
+    antonyms: antonymModelParser.shape.antonym.array(),
+    definitions: z.record(
+      z.enum(definitions.pos.enumValues),
+      definitionModelParser
+        .pick({
+          definition: true,
+          idiom: true,
+        })
+        .extend({
+          examples: exampleModelParser.shape.example.array(),
+        })
+        .array(),
+    ),
+    spellings: spellingModelParser.shape.spelling.array(),
+    synonyms: synonymModelParser.shape.synonym.array(),
+    tags: tagModelParser.shape.tag.array(),
   });
 
 type SlangParser = z.output<typeof slangParser>;

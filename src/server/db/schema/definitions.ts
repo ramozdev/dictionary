@@ -28,7 +28,7 @@ const definitions = mysqlTable("definitions", {
       "pronoun",
       "verb",
     ],
-  }),
+  }).notNull(),
 });
 
 const definitionsRelations = relations(definitions, ({ many, one }) => ({

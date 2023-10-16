@@ -8,6 +8,11 @@ import { getUCR } from "ucr";
 import { handleForm } from "@/app/_action/handleForm";
 import { type SlangParser } from "./parser";
 import { definitions } from "@/server/db/schema";
+import { Select } from "@/ui/html/select";
+import { Input } from "@/ui/html/input";
+import { Textarea } from "@/ui/html/textarea";
+import { Button } from "@/ui/html/button";
+import { v4 as uuidv4 } from "uuid";
 
 type Props = {
   defaultData?: SlangParser;
@@ -135,7 +140,7 @@ export default function Form({ defaultData }: Props) {
 
         <div className="mb-4 grid gap-1">
           <label>Name</label>
-          <input
+          <Input
             className="ring-1"
             {...register("slang.slang.value", {
               onChange: ({ target }) => {
@@ -153,7 +158,7 @@ export default function Form({ defaultData }: Props) {
 
         <div className="grid gap-1">
           <label htmlFor={`slang.explicit.value`}>Explicit</label>
-          <input
+          <Input
             type="checkbox"
             {...register(`slang.explicit.value`, {
               onChange: ({ target }) => {
@@ -170,23 +175,20 @@ export default function Form({ defaultData }: Props) {
         </div>
 
         <div className="mb-4 font-semibold">Definitions</div>
-        <div className="mb-4">
+        <div className="mb-4 space-y-4">
           {_definitions.fields.map((definition, index) => {
             if (definition.definition.action === "REMOVE") return null;
 
             return (
               <div key={definition._id}>
-                <div className="flex gap-2">
+                <div className="grid gap-2 rounded-md border border-neutral-300 p-2">
                   <div className="grid gap-1">
-                    <label htmlFor={`tasks.${index}.name.value`}>
-                      Definition
-                    </label>
                     <div>
                       <label htmlFor={`definitions.${index}.pos.value`}>
                         Part of speech
                       </label>
                       {definition.definitionId.action === "CREATE" ? (
-                        <select {...register(`definitions.${index}.pos.value`)}>
+                        <Select {...register(`definitions.${index}.pos.value`)}>
                           {definitions.pos.enumValues.map((pos) => {
                             return (
                               <option key={pos} value={pos}>
@@ -194,9 +196,9 @@ export default function Form({ defaultData }: Props) {
                               </option>
                             );
                           })}
-                        </select>
+                        </Select>
                       ) : (
-                        <select
+                        <Select
                           {...register(`definitions.${index}.pos.value`, {
                             onChange: ({ target }) => {
                               const { value } = target as HTMLInputElement;
@@ -222,203 +224,232 @@ export default function Form({ defaultData }: Props) {
                               </option>
                             );
                           })}
-                        </select>
+                        </Select>
                       )}
                     </div>
-                    {definition.definitionId.action === "CREATE" ? (
-                      <input
-                        className="ring-1"
-                        {...register(`definitions.${index}.definition.value`)}
-                      />
-                    ) : (
-                      <input
-                        className="ring-1"
-                        {...register(`definitions.${index}.definition.value`, {
-                          onChange: ({ target }) => {
-                            const { value } = target as HTMLInputElement;
-                            setValue(
+                    <div className="flex gap-2">
+                      <div className="w-full">
+                        <label htmlFor={`tasks.${index}.name.value`}>
+                          Definition
+                        </label>
+                        {definition.definitionId.action === "CREATE" ? (
+                          <Textarea
+                            className="w-full"
+                            {...register(
                               `definitions.${index}.definition.value`,
-                              value,
-                            );
-                            if (
-                              value ===
-                              defaultValues?.definitions?.[index]?.definition
-                                ?.value
-                            ) {
-                              setValue(
-                                `definitions.${index}.definition.action`,
-                                "",
-                              );
-                              return;
-                            }
-                            setValue(
-                              `definitions.${index}.definition.action`,
-                              `UPDATE`,
-                            );
-                          },
-                        })}
-                      />
-                    )}
-                  </div>
-
-                  {_examples.fields.map((example, index) => {
-                    if (
-                      example.definitionId.value !==
-                      definition.definitionId.value
-                    ) {
-                      return null;
-                    }
-                    if (example.example.action === "REMOVE") return null;
-
-                    return (
-                      <div key={example._id}>
-                        <div className="grid gap-2">
-                          <div className="grid gap-1">
-                            <label htmlFor={`examples.${index}.example.value`}>
-                              Example
-                            </label>
-                            {example.exampleId.action === "CREATE" ? (
-                              <input
-                                className="ring-1"
-                                {...register(`examples.${index}.example.value`)}
-                              />
-                            ) : (
-                              <input
-                                className="ring-1"
-                                {...register(
-                                  `examples.${index}.example.value`,
-                                  {
-                                    onChange: ({ target }) => {
-                                      const { value } =
-                                        target as HTMLInputElement;
-                                      setValue(
-                                        `examples.${index}.example.value`,
-                                        value,
-                                      );
-                                      if (
-                                        value ===
-                                        defaultValues?.examples?.[index]
-                                          ?.example?.value
-                                      ) {
-                                        setValue(
-                                          `examples.${index}.example.action`,
-                                          "",
-                                        );
-                                        return;
-                                      }
-                                      setValue(
-                                        `examples.${index}.example.action`,
-                                        `UPDATE`,
-                                      );
-                                    },
-                                  },
-                                )}
-                              />
                             )}
-                          </div>
-                          <button
-                            type="button"
-                            className="mt-auto"
-                            onClick={() => {
-                              if (example.exampleId.value === "") {
-                                _examples.remove(index);
-                                return;
-                              }
-                              _examples.update(index, {
-                                ...example,
-                                example: {
-                                  ...example.example,
-                                  action: "REMOVE",
+                          ></Textarea>
+                        ) : (
+                          <Textarea
+                            className="w-full"
+                            {...register(
+                              `definitions.${index}.definition.value`,
+                              {
+                                onChange: ({ target }) => {
+                                  const { value } = target as HTMLInputElement;
+                                  setValue(
+                                    `definitions.${index}.definition.value`,
+                                    value,
+                                  );
+                                  if (
+                                    value ===
+                                    defaultValues?.definitions?.[index]
+                                      ?.definition?.value
+                                  ) {
+                                    setValue(
+                                      `definitions.${index}.definition.action`,
+                                      "",
+                                    );
+                                    return;
+                                  }
+                                  setValue(
+                                    `definitions.${index}.definition.action`,
+                                    `UPDATE`,
+                                  );
                                 },
-                              });
-                            }}
-                          >
-                            Delete example
-                          </button>
-                        </div>
+                              },
+                            )}
+                          ></Textarea>
+                        )}
                       </div>
-                    );
-                  })}
-
-                  <button
-                    type="button"
-                    className="mb-8 ring-1"
-                    onClick={() => {
-                      _examples.append({
-                        definitionId: {
-                          value: definition.definitionId.value,
-                          action: "CREATE",
-                        },
-                        example: { value: "", action: "CREATE" },
-                        exampleId: { value: "", action: "CREATE" },
-                      });
-                    }}
-                  >
-                    Add Example
-                  </button>
-
-                  <button
-                    type="button"
-                    className="mt-auto"
-                    onClick={() => {
-                      if (definition.definitionId.value === "") {
-                        _definitions.remove(index);
-                        return;
-                      }
-
-                      _examples.fields.forEach((fieldExample, indexExample) => {
-                        if (
-                          fieldExample.definitionId.value ===
-                          definition.definitionId.value
-                        ) {
-                          if (fieldExample.exampleId.value === "") {
-                            _examples.remove(indexExample);
+                      <Button
+                        type="button"
+                        className="mt-auto"
+                        onClick={() => {
+                          if (definition.definitionId.action === "CREATE") {
+                            _examples.fields.forEach(
+                              (fieldExample, indexExample) => {
+                                if (
+                                  fieldExample.definitionId.value ===
+                                  definition.definitionId.value
+                                ) {
+                                  _examples.remove(indexExample);
+                                }
+                              },
+                            );
+                            _definitions.remove(index);
                             return;
                           }
-                          _examples.update(indexExample, {
-                            ...fieldExample,
-                            example: {
-                              ...fieldExample.example,
+                          _examples.fields.forEach(
+                            (fieldExample, indexExample) => {
+                              if (
+                                fieldExample.definitionId.value ===
+                                definition.definitionId.value
+                              ) {
+                                if (fieldExample.exampleId.value === "") {
+                                  _examples.remove(indexExample);
+                                  return;
+                                }
+                                _examples.update(indexExample, {
+                                  ...fieldExample,
+                                  example: {
+                                    ...fieldExample.example,
+                                    action: "REMOVE",
+                                  },
+                                });
+                              }
+                            },
+                          );
+                          _definitions.update(index, {
+                            ...definition,
+                            definition: {
+                              ...definition.definition,
                               action: "REMOVE",
                             },
                           });
-                        }
-                      });
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </div>
+                  </div>
 
-                      _definitions.update(index, {
-                        ...definition,
-                        definition: {
-                          ...definition.definition,
-                          action: "REMOVE",
-                        },
-                      });
-                    }}
-                  >
-                    Delete definition
-                  </button>
+                  <div className="grid rounded-md border border-neutral-300 p-2">
+                    {_examples.fields.map((example, index) => {
+                      if (
+                        example.definitionId.value !==
+                        definition.definitionId.value
+                      ) {
+                        return null;
+                      }
+                      if (example.example.action === "REMOVE") return null;
+
+                      return (
+                        <div key={example._id}>
+                          <div className="flex gap-2">
+                            <div className="grid w-full gap-1">
+                              <label
+                                htmlFor={`examples.${index}.example.value`}
+                              >
+                                Example
+                              </label>
+                              {example.exampleId.action === "CREATE" ? (
+                                <Textarea
+                                  {...register(
+                                    `examples.${index}.example.value`,
+                                  )}
+                                ></Textarea>
+                              ) : (
+                                <Textarea
+                                  {...register(
+                                    `examples.${index}.example.value`,
+                                    {
+                                      onChange: ({ target }) => {
+                                        const { value } =
+                                          target as HTMLInputElement;
+                                        setValue(
+                                          `examples.${index}.example.value`,
+                                          value,
+                                        );
+                                        if (
+                                          value ===
+                                          defaultValues?.examples?.[index]
+                                            ?.example?.value
+                                        ) {
+                                          setValue(
+                                            `examples.${index}.example.action`,
+                                            "",
+                                          );
+                                          return;
+                                        }
+                                        setValue(
+                                          `examples.${index}.example.action`,
+                                          `UPDATE`,
+                                        );
+                                      },
+                                    },
+                                  )}
+                                ></Textarea>
+                              )}
+                            </div>
+                            <Button
+                              type="button"
+                              className="mt-auto"
+                              onClick={() => {
+                                if (example.exampleId.value === "") {
+                                  _examples.remove(index);
+                                  return;
+                                }
+                                _examples.update(index, {
+                                  ...example,
+                                  example: {
+                                    ...example.example,
+                                    action: "REMOVE",
+                                  },
+                                });
+                              }}
+                            >
+                              Delete
+                            </Button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                    <div>
+                      <Button
+                        type="button"
+                        className="mt-4"
+                        onClick={() => {
+                          _examples.append({
+                            definitionId: {
+                              value: definition.definitionId.value,
+                              action: "CREATE",
+                            },
+                            example: { value: "", action: "CREATE" },
+                            exampleId: { value: "", action: "CREATE" },
+                          });
+                        }}
+                      >
+                        Add Example
+                      </Button>
+                    </div>
+                  </div>
                 </div>
               </div>
             );
           })}
         </div>
         <div>
-          <button
+          <Button
             type="button"
             className="mb-8 ring-1"
             onClick={() => {
               _definitions.append({
                 definition: { value: "", action: "CREATE" },
-                definitionId: { value: "", action: "CREATE" },
+                definitionId: {
+                  value: `UCR_CREATE_${uuidv4()}`,
+                  action: "CREATE",
+                },
                 idiom: { value: "", action: "CREATE" },
                 pos: { value: "", action: "CREATE" },
               });
             }}
           >
             Add Definition
-          </button>
+          </Button>
         </div>
 
-        <button className="ring-1">Save changes</button>
+        <Button className="ring-1">Save changes</Button>
       </form>
 
       <div className="flex gap-2">

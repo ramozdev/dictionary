@@ -6,6 +6,9 @@ import { startTransition } from "react";
 import { type CreateSlangInput, createSlangSchema } from "@/app/new/validation";
 import { handleForm } from "@/app/new/_action/handleForm";
 import { definitions } from "@/server/db/schema";
+import { Select } from "@/ui/html/select";
+import { Input } from "@/ui/html/input";
+import { Textarea } from "@/ui/html/textarea";
 
 export default function Form() {
   const {
@@ -62,12 +65,12 @@ export default function Form() {
       <form onSubmit={(e) => void onSubmit(e)} className="mt-4 grid">
         <div className="mb-4 grid gap-1">
           <label>Slang</label>
-          <input className="ring-1" {...register("slang.slang")} />
+          <Input className="ring-1" {...register("slang.slang")} />
         </div>
 
         <div className="flex gap-1">
           <label htmlFor={`slang.explicit`}>Explicit</label>
-          <input type="checkbox" {...register(`slang.explicit`)} />
+          <Input type="checkbox" {...register(`slang.explicit`)} />
         </div>
 
         <div>Definitions</div>
@@ -83,7 +86,7 @@ export default function Form() {
                     <label htmlFor={`definitions.${index}.pos`}>
                       Part of speech
                     </label>
-                    <select {...register(`definitions.${index}.pos`)}>
+                    <Select {...register(`definitions.${index}.pos`)}>
                       {definitions.pos.enumValues.map((pos) => {
                         return (
                           <option key={pos} value={pos}>
@@ -91,12 +94,12 @@ export default function Form() {
                           </option>
                         );
                       })}
-                    </select>
+                    </Select>
                   </div>
-                  <textarea
+                  <Textarea
                     className="ring-1"
                     {...register(`definitions.${index}.definition`)}
-                  ></textarea>
+                  ></Textarea>
                 </div>
 
                 {_examples.fields.map((fieldExample, indexExample) => {
@@ -108,10 +111,10 @@ export default function Form() {
                         <label htmlFor={`examples.${indexExample}.example`}>
                           Example
                         </label>
-                        <textarea
+                        <Textarea
                           className="ring-1"
                           {...register(`examples.${indexExample}.example`)}
-                        ></textarea>
+                        ></Textarea>
                       </div>
 
                       <div>
