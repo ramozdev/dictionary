@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { startTransition } from "react";
 import { type CreateSlangInput, createSlangSchema } from "@/app/new/validation";
 import { handleForm } from "@/app/new/_action/handleForm";
+import { definitions } from "@/server/db/schema";
 
 export default function Form() {
   const {
@@ -78,6 +79,20 @@ export default function Form() {
                   <label htmlFor={`definitions.${index}.definition`}>
                     Definition
                   </label>
+                  <div>
+                    <label htmlFor={`definitions.${index}.pos`}>
+                      Part of speech
+                    </label>
+                    <select {...register(`definitions.${index}.pos`)}>
+                      {definitions.pos.enumValues.map((pos) => {
+                        return (
+                          <option key={pos} value={pos}>
+                            {pos}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  </div>
                   <textarea
                     className="ring-1"
                     {...register(`definitions.${index}.definition`)}

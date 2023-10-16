@@ -7,6 +7,7 @@ import { startTransition } from "react";
 import { getUCR } from "ucr";
 import { handleForm } from "@/app/_action/handleForm";
 import { type SlangParser } from "./parser";
+import { definitions } from "@/server/db/schema";
 
 type Props = {
   defaultData?: SlangParser;
@@ -180,6 +181,50 @@ export default function Form({ defaultData }: Props) {
                     <label htmlFor={`tasks.${index}.name.value`}>
                       Definition
                     </label>
+                    <div>
+                      <label htmlFor={`definitions.${index}.pos.value`}>
+                        Part of speech
+                      </label>
+                      {definition.definitionId.action === "CREATE" ? (
+                        <select {...register(`definitions.${index}.pos.value`)}>
+                          {definitions.pos.enumValues.map((pos) => {
+                            return (
+                              <option key={pos} value={pos}>
+                                {pos}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      ) : (
+                        <select
+                          {...register(`definitions.${index}.pos.value`, {
+                            onChange: ({ target }) => {
+                              const { value } = target as HTMLInputElement;
+                              setValue(`definitions.${index}.pos.value`, value);
+                              if (
+                                value ===
+                                defaultValues?.definitions?.[index]?.pos?.value
+                              ) {
+                                setValue(`definitions.${index}.pos.action`, "");
+                                return;
+                              }
+                              setValue(
+                                `definitions.${index}.pos.action`,
+                                `UPDATE`,
+                              );
+                            },
+                          })}
+                        >
+                          {definitions.pos.enumValues.map((pos) => {
+                            return (
+                              <option key={pos} value={pos}>
+                                {pos}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      )}
+                    </div>
                     {definition.definitionId.action === "CREATE" ? (
                       <input
                         className="ring-1"
@@ -297,6 +342,23 @@ export default function Form({ defaultData }: Props) {
 
                   <button
                     type="button"
+                    className="mb-8 ring-1"
+                    onClick={() => {
+                      _examples.append({
+                        definitionId: {
+                          value: definition.definitionId.value,
+                          action: "CREATE",
+                        },
+                        example: { value: "", action: "CREATE" },
+                        exampleId: { value: "", action: "CREATE" },
+                      });
+                    }}
+                  >
+                    Add Example
+                  </button>
+
+                  <button
+                    type="button"
                     className="mt-auto"
                     onClick={() => {
                       if (definition.definitionId.value === "") {
@@ -309,6 +371,10 @@ export default function Form({ defaultData }: Props) {
                           fieldExample.definitionId.value ===
                           definition.definitionId.value
                         ) {
+                          if (fieldExample.exampleId.value === "") {
+                            _examples.remove(indexExample);
+                            return;
+                          }
                           _examples.update(indexExample, {
                             ...fieldExample,
                             example: {
@@ -348,7 +414,7 @@ export default function Form({ defaultData }: Props) {
               });
             }}
           >
-            Add task
+            Add Definition
           </button>
         </div>
 
