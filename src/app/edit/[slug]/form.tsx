@@ -170,15 +170,17 @@ export default function Form({ defaultData }: Props) {
 
         <div className="mb-4 font-semibold">Definitions</div>
         <div className="mb-4">
-          {_definitions.fields.map((field, index) => {
-            if (field.definition.action === "REMOVE") return null;
+          {_definitions.fields.map((definition, index) => {
+            if (definition.definition.action === "REMOVE") return null;
 
             return (
-              <div key={field._id}>
+              <div key={definition._id}>
                 <div className="flex gap-2">
                   <div className="grid gap-1">
-                    <label htmlFor={`tasks.${index}.name.value`}>Name</label>
-                    {field.definitionId.action === "CREATE" ? (
+                    <label htmlFor={`tasks.${index}.name.value`}>
+                      Definition
+                    </label>
+                    {definition.definitionId.action === "CREATE" ? (
                       <input
                         className="ring-1"
                         {...register(`definitions.${index}.definition.value`)}
@@ -214,103 +216,113 @@ export default function Form({ defaultData }: Props) {
                     )}
                   </div>
 
-                  {_examples.fields
-                    .filter(
-                      ({ definitionId }) =>
-                        definitionId.value === field.definitionId.value,
-                    )
-                    .map((field, index) => {
-                      if (field.example.action === "REMOVE") return null;
+                  {_examples.fields.map((example, index) => {
+                    if (
+                      example.definitionId.value !==
+                      definition.definitionId.value
+                    ) {
+                      return null;
+                    }
+                    if (example.example.action === "REMOVE") return null;
 
-                      return (
-                        <div key={field._id}>
-                          <div className="grid gap-2">
-                            <div className="grid gap-1">
-                              <label
-                                htmlFor={`examples.${index}.example.value`}
-                              >
-                                Example
-                              </label>
-                              {field.exampleId.action === "CREATE" ? (
-                                <input
-                                  className="ring-1"
-                                  {...register(
-                                    `examples.${index}.example.value`,
-                                  )}
-                                />
-                              ) : (
-                                <input
-                                  className="ring-1"
-                                  {...register(
-                                    `examples.${index}.example.value`,
-                                    {
-                                      onChange: ({ target }) => {
-                                        const { value } =
-                                          target as HTMLInputElement;
-                                        setValue(
-                                          `examples.${index}.example.value`,
-                                          value,
-                                        );
-                                        if (
-                                          value ===
-                                          defaultValues?.examples?.[index]
-                                            ?.example?.value
-                                        ) {
-                                          setValue(
-                                            `examples.${index}.example.action`,
-                                            "",
-                                          );
-                                          return;
-                                        }
+                    return (
+                      <div key={example._id}>
+                        <div className="grid gap-2">
+                          <div className="grid gap-1">
+                            <label htmlFor={`examples.${index}.example.value`}>
+                              Example
+                            </label>
+                            {example.exampleId.action === "CREATE" ? (
+                              <input
+                                className="ring-1"
+                                {...register(`examples.${index}.example.value`)}
+                              />
+                            ) : (
+                              <input
+                                className="ring-1"
+                                {...register(
+                                  `examples.${index}.example.value`,
+                                  {
+                                    onChange: ({ target }) => {
+                                      const { value } =
+                                        target as HTMLInputElement;
+                                      setValue(
+                                        `examples.${index}.example.value`,
+                                        value,
+                                      );
+                                      if (
+                                        value ===
+                                        defaultValues?.examples?.[index]
+                                          ?.example?.value
+                                      ) {
                                         setValue(
                                           `examples.${index}.example.action`,
-                                          `UPDATE`,
+                                          "",
                                         );
-                                      },
+                                        return;
+                                      }
+                                      setValue(
+                                        `examples.${index}.example.action`,
+                                        `UPDATE`,
+                                      );
                                     },
-                                  )}
-                                />
-                              )}
-                            </div>
-                            <button
-                              type="button"
-                              className="mt-auto"
-                              onClick={() => {
-                                if (field.exampleId.value === "") {
-                                  _examples.remove(index);
-                                  return;
-                                }
-                                // TODO: Find the correct index to delete
-                                // Currently doesn't work because there are
-                                // renders of the entire _examples array
-                                _examples.update(index, {
-                                  ...field,
-                                  example: {
-                                    ...field.example,
-                                    action: "REMOVE",
                                   },
-                                });
-                              }}
-                            >
-                              Delete example
-                            </button>
+                                )}
+                              />
+                            )}
                           </div>
+                          <button
+                            type="button"
+                            className="mt-auto"
+                            onClick={() => {
+                              if (example.exampleId.value === "") {
+                                _examples.remove(index);
+                                return;
+                              }
+                              _examples.update(index, {
+                                ...example,
+                                example: {
+                                  ...example.example,
+                                  action: "REMOVE",
+                                },
+                              });
+                            }}
+                          >
+                            Delete example
+                          </button>
                         </div>
-                      );
-                    })}
+                      </div>
+                    );
+                  })}
 
                   <button
                     type="button"
                     className="mt-auto"
                     onClick={() => {
-                      if (field.definitionId.value === "") {
+                      if (definition.definitionId.value === "") {
                         _definitions.remove(index);
                         return;
                       }
+
+                      _examples.fields.forEach((fieldExample, indexExample) => {
+                        if (
+                          fieldExample.definitionId.value ===
+                          definition.definitionId.value
+                        ) {
+                          _examples.update(indexExample, {
+                            ...fieldExample,
+                            example: {
+                              ...fieldExample.example,
+                              action: "REMOVE",
+                            },
+                          });
+                        }
+                      });
+
                       _definitions.update(index, {
-                        ...field,
+                        ...definition,
                         definition: {
-                          ...field.definition,
+                          ...definition.definition,
                           action: "REMOVE",
                         },
                       });
