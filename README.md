@@ -1,6 +1,6 @@
-# Slang
+# Dictionary
 
-This is an open source slang dictionary.
+Open source dictionary.
 
 ## Tech Stack
 
